@@ -1,61 +1,49 @@
-Function myNew(constructor){
-  let obj = Object.create();
-  obj.__proto__ = constructor.prototype;    //指定原型
-  constructor.call(obj, Array.prototype.slice.call(arguments, 1));    //调用构造函数
-  return obj;
+//发布订阅模式；将该类型的回调函数存储起来（订阅）；当触发该类型事件时，调用回调函数（发布）；
+class sb{
+    constructor(){
+       this.list = {}; 
+    }
+    on(type, callback){      //订阅
+        if(!this.list)this.list = {};
+        if(!list[type]) list[type] = [callback];
+        else
+            list[type].push(callback);
+    }
+    off(type, callback){
+        if(!list[type]) return;
+        else
+            list[type] = list[type].filter(item => item !== callback);
+    }
+    emit(type, ...args){     //发布
+        list[type].ForEach(f => {
+            f.apply(this, args)
+        })
+    }
 }
 
-Function.prototype.myCall = function(o){
-  let obj = o || window;
-  let f = Symbol();
-  obj[f] = this;
-  let newArguments = [];
-  for(let i = 1; i<arguments.length; i++)
-    newArguments.push(arguments[i]);
-  let res = obj[f](...newArguments);
-  delete obj[f];
-  return res;
-}
 
-Function.prototype.myApply = function(o){
-  let obj = o || window;
-  let f = Symbol();
-  obj[f] = this;
-  let res;
-  if(arguments[1])
-    res = obj[f](...arguments[1]);
-  else
-    res = obj[f]();
-  delete obj[f];
-  return res;
+//观察者模式（包含发布订阅模式的原理）；将该被观察者的观察者存储起来；当被观察者更新时，调用观察者的函数；
+class Subject{
+    constructor(name){
+        this.observers = [];
+        this.name = name;
+        this.state = '1';
+    }
+    attach(observer){
+        this.observers.push(observer);
+    }
+    setState(state){
+        this.state = state;
+        this.observers.forEach(o => {
+            o.update(state);
+        })
+    }
 }
-
-Function.prototype.myBind = function(o){
-  let that = this;
-  let arguments1 = [].slice.call(arguments, 1);
-  let emptyf = function(){};
-  let newf = function(){
-    let arguments2 = [].slice.call(arguments);
-    if(this instanceof newf)    //如果使用new调用newf，那么this指向新创建的实例，且在同一条原型链上，条件为true
-      return that.apply(this, arguments1.concat(arguments2))    //将构造函数的this绑定到该实例上
-    else
-      return that.apply(o, arguments1.concat(arguments2));
-  }
-  emptyf.prototype = that.prototype;    //以空函数作为跳板，将空函数的原型指向构造函数的原型
-  newf.prototype = new emptyf();    //将newf函数也就是使用new关键字时的构造函数的原型指向emptyf实例，实现原型链继承
-  return newf;
+class Observer{
+    constructor(name){
+        this.name = name;
+    }
+    update(state){
+        console.log('I see change to' + state);
+    }
 }
-
-function print(a,b,c){
-  console.log(this.name);
-  console.log(a, b, c);
-  return '567'
-}
-let person = {
-  'name': '123',
-  'age': '22',
-  'tei': '234'
-}
-let newprint = print.myBind(person, 1,2,3);
-let b = new newprint();
-console.log(b);
