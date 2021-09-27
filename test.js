@@ -1,28 +1,20 @@
-let list=[
-  {id:2,name:'部门B',parentId:0},
-  {id:3,name:'部门C',parentId:1},
-  {id:1,name:'部门A',parentId:2},
-  {id:4,name:'部门D',parentId:1},
-  {id:5,name:'部门E',parentId:2},
-  {id:6,name:'部门F',parentId:3},
-  {id:7,name:'部门G',parentId:2},
-  {id:8,name:'部门H',parentId:4}
-];
+let arr = [1,2,3,[4,5,[6,7],8],9,10,[23,12]];
 
-function treefy(arr){
-  let obj = {};
-  let res = [];
-  for(let i of arr){
-    obj[i.id] = i;
-  }
-  for(let i of arr){
-    if(obj[i.parentId]){
-      obj[i.parentId].children = obj[i.parentId].children||[];
-      obj[i.parentId].children.push(i);
+function flatten(array, n){
+    let res = [];
+    for(let i = 0; i<n; i++){
+        res = res.concat(...array);
     }
-    else res.push(i);
-  }
-  return res;
+    return res;
 }
 
-console.log(treefy(list));
+function flatten2(array, n){
+    if(n === 0)return array;
+    return array.reduce((res, cur) => {
+        if( cur instanceof Array )res.push(...flatten2(cur, n-1));
+        else res.push(cur);
+        return res;
+    }, [])
+}
+
+console.log(flatten2(arr, 2));
