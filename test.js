@@ -1,20 +1,52 @@
-let arr = [1,2,3,[4,5,[6,7],8],9,10,[23,12]];
-
-function flatten(array, n){
-    let res = [];
-    for(let i = 0; i<n; i++){
-        res = res.concat(...array);
+function quickSort(arr, l ,r){      //快排，在判断条件时增加=来判断有重复数据时的情况，否则会进入死循环
+    function getIndex(arr, l, r){
+        let temp = arr[l];
+        while(l < r){
+            while(l<r && arr[r]<=temp)r--;
+            arr[l] = arr[r];
+            while(l<r && arr[l]>temp)l++;
+            arr[r] = arr[l]
+        }
+        arr[l] = temp;
+        return l;
     }
+
+    if(l>=r)return;
+    let index = getIndex(arr, l, r);
+    quickSort(arr, l, index - 1);
+    quickSort(arr, index+1, r);
+}
+
+
+function findKthLargest(nums, n) {       //找到第K大的数
+    let res = 0;
+    quickSort(nums, 0, nums.length-1)
     return res;
-}
 
-function flatten2(array, n){
-    if(n === 0)return array;
-    return array.reduce((res, cur) => {
-        if( cur instanceof Array )res.push(...flatten2(cur, n-1));
-        else res.push(cur);
-        return res;
-    }, [])
-}
+    function quickSort(arr, l ,r){
+        function getIndex(arr, l, r){
+            let temp = arr[l];
+            while(l < r){
+                while(l < r && arr[r]<=temp)r--;
+                arr[l] = arr[r];
+                while(l < r && arr[l]>temp)l++;
+                arr[r]=arr[l]
+            }
+            arr[l] = temp;
+            return l;
+        }
 
-console.log(flatten2(arr, 2));
+        let index = getIndex(arr, l, r);
+        if(index > k - 1)
+            quickSort(arr, l, index - 1);
+        else if(index < k - 1)
+            quickSort(arr, index+1, r);
+        else{
+            res = arr[index];
+            return;
+        } 
+    }
+};
+
+let n = [3,2,3,1,2,4,5,5,6];
+findKthLargest(n, 4);
