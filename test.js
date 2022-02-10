@@ -1,4 +1,4 @@
-Function myNew(constructor){
+function myNew(constructor){
   let obj = Object.create();
   obj.__proto__ = constructor.prototype;    //指定原型
   constructor.call(obj, Array.prototype.slice.call(arguments, 1));    //调用构造函数
