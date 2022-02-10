@@ -1,8 +1,8 @@
-function kkk(obj){
+function objFlatten(obj){
   let res = {};
   for(let i in obj){
     if(obj[i] instanceof Object){
-      let t = kkk(obj[i]);
+      let t = objFlatten(obj[i]);
       for(let a in t)
         res[i + '.' + a] = t[a];
     }
@@ -22,7 +22,7 @@ let my = {
   },
   g: 'h'
 }
-let r = kkk(my);
+let r = objFlatten(my);
 console.log(r);
 // {
 //   a.b: 'c',
