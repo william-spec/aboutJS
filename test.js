@@ -1,11 +1,10 @@
 let arr = [1,2,3,[4,5,[6,7],8],9,10,[23,12]];
 
 function flatten(array, n){
-    let res = [];
     for(let i = 0; i<n; i++){
-        res = res.concat(...array);
+        array = [].concat(...array);
     }
-    return res;
+    return array;
 }
 
 function flatten2(array, n){
